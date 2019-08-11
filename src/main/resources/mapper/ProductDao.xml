@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xishanqu.redislock.mapper.ProductDao">
+
+  <resultMap id="BaseResultMap" type="com.xishanqu.redislock.model.Product">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="sn" jdbcType="VARCHAR" property="sn" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="introduction" jdbcType="VARCHAR" property="introduction" />
+    <result column="price" jdbcType="DOUBLE" property="price" />
+    <result column="stock" jdbcType="INTEGER" property="stock" />
+    <result column="version" jdbcType="INTEGER" property="version"/>
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+
+
+  <select id="selectBySnKey" parameterType="string" resultMap="BaseResultMap">
+    select
+    *
+    from t_product as product
+    where product.sn = #{productSn,jdbcType=VARCHAR}
+  </select>
+
+
+  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.xishanqu.redislock.model.Product" useGeneratedKeys="true">
+    insert into t_product
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="sn != null">
+        sn,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="introduction != null">
+        introduction,
+      </if>
+      <if test="price != null">
+        price,
+      </if>
+      <if test="stock != null">
+        stock,
+      </if>
+        <if test="version != null">
+            version,
+        </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="sn != null">
+        #{sn,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="introduction != null">
+        #{introduction,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null">
+        #{price,jdbcType=DOUBLE},
+      </if>
+      <if test="stock != null">
+        #{stock,jdbcType=INTEGER},
+      </if>
+        <if test="version != null">
+        #{version,jdbcType=INTEGER},
+        </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateBySnKeySelective" parameterType="com.xishanqu.redislock.model.Product">
+    update t_product as product
+    <set>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="introduction != null">
+        introduction = #{introduction,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null">
+        price = #{price,jdbcType=DOUBLE},
+      </if>
+      <if test="stock != null">
+        stock = #{stock,jdbcType=INTEGER},
+      </if>
+      <if test="version != null">
+        version = #{version,jdbcType=INTEGER},
+      </if>
+      <if test="create_time != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="update_time != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where product.sn = #{sn,jdbcType=VARCHAR}
+  </update>
+
+
+  <!-- 减库存操作 -->
+  <update id="reduceProductStock" parameterType="com.xishanqu.redislock.common.request.ProductOrderParam">
+    update t_product as product
+    set product.stock = product.stock - #{purchaseCount, jdbcType=INTEGER}
+    where product.sn = #{productSn,jdbcType=VARCHAR}
+  </update>
+
+
+  <!-- mysql乐观锁减库存操作 -->
+  <update id="reduceProductStockForMysql" parameterType="com.xishanqu.redislock.common.request.ProductOrderParam">
+    UPDATE t_product as product
+    SET
+        product.stock = product.stock - #{purchaseCount, jdbcType=INTEGER},
+        version =  version + 1
+    WHERE
+          product.sn = #{productSn,jdbcType=VARCHAR}
+    AND
+          product.version = #{version,}
+  </update>
+
+
+</mapper>

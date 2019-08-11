@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xishanqu.redislock.mapper.OrderDao">
+
+  <resultMap id="BaseResultMap" type="com.xishanqu.redislock.model.Order">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="order_no" jdbcType="VARCHAR" property="orderNo" />
+    <result column="product_sn" jdbcType="VARCHAR" property="productSn" />
+    <result column="product_name" jdbcType="VARCHAR" property="productName" />
+    <result column="price" jdbcType="DOUBLE" property="price" />
+    <result column="quantity" jdbcType="INTEGER" property="quantity" />
+    <result column="amount" jdbcType="DOUBLE" property="amount" />
+    <result column="buy_user_id" jdbcType="VARCHAR" property="buyUserId"/>
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="buy_name" jdbcType="VARCHAR" property="buyName" />
+    <result column="address" jdbcType="VARCHAR" property="address" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+
+  <select id="selectByOrderNo" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    *
+    from t_order as t
+    where t.order_no = #{orderNo,jdbcType=VARCHAR}
+  </select>
+
+
+  <insert id="insertSelective" keyProperty="id" parameterType="com.xishanqu.redislock.model.Order" useGeneratedKeys="true">
+    insert into t_order
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="orderNo != null">
+        order_no,
+      </if>
+      <if test="productSn != null">
+        product_sn,
+      </if>
+      <if test="productName != null">
+        product_name,
+      </if>
+      <if test="price != null">
+        price,
+      </if>
+      <if test="quantity != null">
+        quantity,
+      </if>
+      <if test="amount != null">
+        amount,
+      </if>
+      <if test="buyUserId != null">
+        buy_user_id,
+      </if>
+      <if test="phone != null">
+        phone,
+      </if>
+      <if test="buyName != null">
+        buy_name,
+      </if>
+      <if test="address != null">
+        address,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id, jdbcType=INTEGER}
+      </if>
+      <if test="orderNo != null">
+        #{orderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="productSn != null">
+        #{productSn,jdbcType=VARCHAR},
+      </if>
+      <if test="productName != null">
+        #{productName,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null">
+        #{price,jdbcType=DOUBLE},
+      </if>
+      <if test="quantity != null">
+        #{quantity,jdbcType=INTEGER},
+      </if>
+      <if test="amount != null">
+        #{amount,jdbcType=DOUBLE},
+      </if>
+      <if test="buyUserId != null">
+        #{buyUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null">
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="buyName != null">
+        #{buyName,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null">
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+
+
+  <update id="updateByOrderNoSelective" parameterType="com.xishanqu.redislock.model.Order">
+    update t_order as t
+    <set>
+      <if test="product_sn != null">
+        product_sn = #{productSn,jdbcType=VARCHAR},
+      </if>
+      <if test="product_name != null">
+        product_name = #{productName,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null">
+        price = #{price,jdbcType=DOUBLE},
+      </if>
+      <if test="quantity != null">
+        quantity = #{quantity,jdbcType=INTEGER},
+      </if>
+      <if test="amount != null">
+        amount = #{amount,jdbcType=DOUBLE},
+      </if>
+      <if test="buy_user_id != null">
+        buy_user_id = #{buyUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null">
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="buy_name != null">
+        buy_name = #{buyName,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null">
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="create_time != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="update_time != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where t.order_no = #{orderNo,jdbcType=VARCHAR}
+  </update>
+
+
+</mapper>
