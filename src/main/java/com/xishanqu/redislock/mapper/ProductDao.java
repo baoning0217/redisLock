@@ -6,6 +6,8 @@ import com.xishanqu.redislock.model.Product;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 /**
  * 商品DAO
  * @Param
@@ -25,6 +27,13 @@ public interface ProductDao {
      */
     int insertSelective(Product record);
 
+
+    /**
+     * 查询所有数据
+     * @return
+     */
+    List<Product> selectAllProduct();
+
     /**
      * 查询
      * @Param
@@ -33,6 +42,7 @@ public interface ProductDao {
      * @Time
      */
     Product selectBySnKey(@Param("productSn") String productSn);
+
 
     /**
      * 修改

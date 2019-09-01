@@ -13,7 +13,16 @@ public class RedisKeyConstant {
      * 商品模块KEY
      */
     public static final class PRODUCT_MODULE {
-        public static final String PRODUCT_KEY = "product";
+        public static final String PRODUCT_KEY = "product:";
     }
+
+
+    /**
+     * 布隆过滤器的键在Redis中的前缀，统计过滤器对Redis的使用情况
+     */
+    public static final class BLOOM {
+        public static final String BLOOM_KEY_PREFIX = "bloom:";
+    }
+
 
 }
