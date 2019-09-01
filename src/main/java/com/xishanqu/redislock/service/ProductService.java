@@ -2,8 +2,7 @@ package com.xishanqu.redislock.service;
 
 import com.xishanqu.redislock.common.constant.IDKeyConstant;
 import com.xishanqu.redislock.common.constant.RedisKeyConstant;
-import com.xishanqu.redislock.config.RedisConfig;
-import com.xishanqu.redislock.core.RedisBloomFilter;
+import com.xishanqu.redislock.core.StringRedisBloomFilter;
 import com.xishanqu.redislock.mapper.ProductDao;
 import com.xishanqu.redislock.model.Product;
 import com.xishanqu.redislock.utils.SequenceUtils;
@@ -31,9 +30,7 @@ public class ProductService {
     @Autowired
     private ProductDao productDao;
     @Autowired
-    private RedisBloomFilter redisBloomFilter;
-    @Autowired
-    private RedisConfig redisConfig;
+    private StringRedisBloomFilter stringRedisBloomFilter;
     @Autowired
     private RedisTemplate redisTemplate;
 
@@ -45,7 +42,7 @@ public class ProductService {
         List<Product> allProducts = productDao.selectAllProduct();
         if (!ObjectUtils.isEmpty(allProducts)){
             allProducts.stream().forEach(product -> {
-                redisBloomFilter.addByBloomFilter(redisConfig.initBloomFilterHelper(), redisBloomFilter.getRedisBloomKey(product.getSn()), product.getSn());
+                stringRedisBloomFilter.addByBloomFilter(stringRedisBloomFilter.getRedisBloomKey(product.getSn()), product.getSn());
             });
         }
     }
@@ -62,7 +59,11 @@ public class ProductService {
         //设置商品编码
         product.setSn(SequenceUtils.genKey(IDKeyConstant.PRODUCT.PRODUCT_KEY_SN, 10));
         product.setCreateTime(new Date());
-        return productDao.insertSelective(product);
+        int insertSelective = productDao.insertSelective(product);
+        if (insertSelective > 0){
+            stringRedisBloomFilter.addByBloomFilter(stringRedisBloomFilter.getRedisBloomKey(product.getSn()), product.getSn());
+        }
+        return insertSelective;
     }
 
 
@@ -74,7 +75,7 @@ public class ProductService {
     public Product selectByProductSn(String productSn){
         Product product = null;
         //检测布隆过滤器中是否已经存了商品的sn
-        boolean filter = redisBloomFilter.includeByBloomFilter(redisConfig.initBloomFilterHelper(), redisBloomFilter.getRedisBloomKey(productSn), productSn);
+        boolean filter = stringRedisBloomFilter.includeByBloomFilter(stringRedisBloomFilter.getRedisBloomKey(productSn), productSn);
         if (!filter){
             log.info("布隆过滤器中不存在该数据");
             return product;
