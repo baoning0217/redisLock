@@ -89,7 +89,7 @@ public class ProductService {
         //从数据库中获取数据
         product = productDao.selectBySnKey(productSn);
         if (!ObjectUtils.isEmpty(product)){
-            log.info("从Mysql中获取商品>>>>>>>>>>>>>>:{}", product.getSn());
+            log.info("从Mysql中获取商品>>>>>>>>>>>>>>:{}", product.getSn() );
             //设置缓存
             redisTemplate.opsForValue().setIfAbsent(RedisKeyConstant.PRODUCT_MODULE.PRODUCT_KEY + product.getSn(), product, 600, TimeUnit.SECONDS);
         }
