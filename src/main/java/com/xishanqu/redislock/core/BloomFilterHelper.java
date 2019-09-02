@@ -31,14 +31,14 @@ public class BloomFilterHelper<T> {
     /**
      * 布隆过滤器
      * @param funnel
-     * @param expextedInsertions
+     * @param expectedInsertions
      * @param fpp
      */
-    public BloomFilterHelper(Funnel<T> funnel, int expextedInsertions, double fpp){
+    public BloomFilterHelper(Funnel<T> funnel, int expectedInsertions, double fpp){
         Preconditions.checkArgument(funnel != null,"funnel不能为空");
         this.funnel = funnel;
-        bitSize = optimalNumOfBits(expextedInsertions, fpp);
-        numHashFunctions = optimalNumOfHashFunctions(expextedInsertions, bitSize);
+        bitSize = optimalNumOfBits(expectedInsertions, fpp);
+        numHashFunctions = optimalNumOfHashFunctions(expectedInsertions, bitSize);
     }
 
 

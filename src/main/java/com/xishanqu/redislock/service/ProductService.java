@@ -83,11 +83,13 @@ public class ProductService {
         //从redis缓存中获取数据
         product = (Product)redisTemplate.opsForValue().get(RedisKeyConstant.PRODUCT_MODULE.PRODUCT_KEY + productSn);
         if (!ObjectUtils.isEmpty(product)){
+            log.info("从Redis中获取商品>>>>>>>>>>>>>>:{}", product.getSn());
             return product;
         }
         //从数据库中获取数据
         product = productDao.selectBySnKey(productSn);
         if (!ObjectUtils.isEmpty(product)){
+            log.info("从Mysql中获取商品>>>>>>>>>>>>>>:{}", product.getSn());
             //设置缓存
             redisTemplate.opsForValue().setIfAbsent(RedisKeyConstant.PRODUCT_MODULE.PRODUCT_KEY + product.getSn(), product, 600, TimeUnit.SECONDS);
         }
