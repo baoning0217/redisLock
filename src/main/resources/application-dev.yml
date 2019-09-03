@@ -25,6 +25,7 @@ spring:
   #   cluster: 192.168.207.10:7001,192.168.207.20:7002,192.168.207.30:7003,192.168.207.10:7004,192.168.207.20:7005,192.168.207.30:7006
 
 
+
 # mybatis
 mybatis:
   mapper-locations: classpath:mapper/*.xml
@@ -32,6 +33,7 @@ mybatis:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
     map-underscore-to-camel-case: true
+
 
 
 

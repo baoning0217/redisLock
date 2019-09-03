@@ -1,4 +1,4 @@
-package com.xishanqu.redislock.job;
+package com.xishanqu.redislock.task;
 
 import com.xishanqu.redislock.model.Product;
 import com.xishanqu.redislock.service.ProductService;
@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Slf4j
-public class JobService {
+public class TaskService {
 
     @Autowired
     private ProductService productService;
