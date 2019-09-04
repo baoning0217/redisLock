@@ -14,6 +14,9 @@
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
 
+  <!-- 二级缓存 -->
+  <cache eviction="FIFO" flushInterval="60000" size="512" readOnly="true" type="org.mybatis.caches.ehcache.EhcacheCache"/>
+
 
   <!--查询所有数据-->
   <select id="selectAllProduct" resultMap="BaseResultMap">
